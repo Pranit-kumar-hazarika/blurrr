@@ -1,41 +1,43 @@
-# blurrr
+# blurrr 📸
 
 **A shared event camera for photos that feel like memories.**
 
-## Open the website
-
 ### [Visit blurrr](https://blurrrr.netlify.app)
 
-Browse the site and explore the app. To use the camera, open it in a modern browser and allow camera access when prompted. Camera access requires HTTPS, which the live site uses.
+blurrr is a collaborative event photo-sharing web app where friends can capture and share moments from college festivals, parties, trips, and other gatherings—all in one shared gallery.
 
-To create an event and share photos, the deployed API and Supabase project must also be configured and available.
+No guest accounts needed. Just open the event link, capture the moment, and share the memories.
 
-## What you can do
+### Features
 
-- Create an event and share its private guest link or QR code.
-- Let guests upload photos without creating accounts.
-- Capture photos with the camera or choose them from a device.
-- Browse the shared event gallery.
-- Download or manage event photos as the organizer.
+- Create events and share guest links.
+- Capture photos or upload them from your device.
+- View photos together in a shared gallery.
+- Download and manage event photos.
+- Vintage-inspired, mobile-friendly interface.
 
-## Project structure
-
-```text
-apps/
-  web/       Static website and browser app
-  api/       Node.js and Express API
-supabase/
-  migrations/ Database schema and private photo storage setup
-docs/        API and architecture notes
-```
-
-## Built with
+### Tech Stack
 
 HTML, CSS, JavaScript, Node.js, Express, and Supabase (Auth, PostgreSQL, and Storage).
 
-## More information
+### Project Structure
 
-- [API documentation](docs/API.md)
+The repository is organized into separate frontend, backend, database migration, and documentation directories.
+
+- `apps/web/` — Frontend
+- `apps/api/` — Backend API
+- `supabase/migrations/` — Database schema and storage setup
+- `docs/` — API and architecture documentation
+
+For implementation details, explore the project folders or read:
+
+- [API Documentation](docs/API.md)
 - [Architecture](docs/ARCHITECTURE.md)
 
+### Security
+
 Never commit `.env` files or expose the Supabase service-role key in the frontend.
+
+---
+
+*Every moment, a little blurry.*
