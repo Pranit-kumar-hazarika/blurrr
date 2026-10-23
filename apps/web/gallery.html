@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Event Folder — blurrr</title><link rel="stylesheet" href="assets/css/style.css"></head>
+<body>
+  <header class="site-header"><a class="logo" href="index.html">blurrr<span>.</span></a><a id="back-link" href="javascript:history.back()">Back to event</a></header>
+  <main class="page-shell">
+    <div class="gallery-head"><div><div class="eyebrow">The shared roll</div><h1 id="event-title" style="font-size:clamp(2.5rem,6vw,4rem)">Event Folder</h1><p id="photo-count">Loading memories…</p></div><button id="refresh-gallery" class="button button-secondary">↻ Refresh</button></div>
+    <p id="status" class="status" role="status"></p><section id="photo-grid" class="photo-grid" aria-label="Event photos"></section>
+  </main>
+  <dialog id="lightbox"><button id="close-lightbox" class="button button-secondary" style="margin-bottom:12px">Close ✕</button><img id="lightbox-image" alt="Expanded event photo"></dialog>
+  <script src="assets/js/config.js"></script><script src="assets/js/api.js"></script><script src="assets/js/gallery.js"></script>
+</body></html>

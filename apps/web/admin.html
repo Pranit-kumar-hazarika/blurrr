@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Studio — blurrr</title><link rel="stylesheet" href="assets/css/style.css"></head>
+<body>
+  <header class="site-header"><a class="logo" href="index.html">blurrr<span>.</span></a><button id="sign-out" class="button button-secondary">Sign out</button></header>
+  <main class="page-shell">
+    <div class="eyebrow">Organizer studio</div><h1 style="font-size:clamp(2.7rem,6vw,4.4rem)">Your little worlds.</h1>
+    <p>Make a room for the memories. Share the guest link with everyone who was there.</p>
+    <section class="panel">
+      <h2 style="font-size:2rem">Create an event</h2>
+      <form id="create-event-form"><label for="event-name">Event name</label><input id="event-name" name="name" minlength="2" maxlength="100" placeholder="e.g. College Fest 2026" required><button type="submit" class="button button-primary" style="margin-top:16px">Create event ↗</button></form>
+      <div id="created-link-panel" class="created-link-panel" hidden>
+        <label for="created-link">Your guest link — copy it now</label>
+        <input id="created-link" readonly>
+        <div class="button-row">
+          <button id="copy-link" class="button button-secondary" type="button">Copy guest link</button>
+          <button id="show-qr" class="button button-secondary" type="button" aria-expanded="false" aria-controls="guest-qr-panel">Show QR code</button>
+        </div>
+        <section id="guest-qr-panel" class="guest-qr-panel" aria-label="Guest link QR code" hidden>
+          <p>Scan this code to open the guest link.</p>
+          <div id="guest-qr-code" class="guest-qr-code" role="img" aria-label="QR code for the guest link"></div>
+          <p class="qr-access-note">For phone scanning, this site must be reachable from your phone. A localhost or 127.0.0.1 link only works on this computer.</p>
+        </section>
+        <p>For security, this guest link is shown only once. Save it somewhere safe.</p>
+      </div>
+      <p id="status" class="status" role="status"></p>
+    </section>
+    <section class="section"><div class="gallery-head"><h2>Your events</h2><button class="button button-secondary" onclick="location.reload()">Refresh</button></div><div id="events-list"></div></section>
+  </main>
+  <dialog id="admin-photos-dialog"><button id="close-admin-photos" class="button button-secondary">Close</button><h2>Event photos</h2><div class="dialog-body"></div></dialog>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="assets/js/config.js"></script><script src="assets/js/supabase-client.js"></script><script src="assets/js/api.js"></script><script src="assets/js/admin.js"></script>
+</body></html>

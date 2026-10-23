@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sign in — blurrr</title><link rel="stylesheet" href="assets/css/style.css"></head>
+<body>
+  <header class="site-header"><a class="logo" href="index.html">blurrr<span>.</span></a><a href="index.html">Back home</a></header>
+  <main class="page-shell"><section class="panel narrow">
+    <div class="eyebrow">Organizer studio</div><h1 style="font-size:3rem">Your events,<br>your memories.</h1>
+    <p>Sign in to create an event and manage its shared album.</p>
+    <form id="auth-form" data-mode="signin">
+      <label for="email">Email address</label><input id="email" name="email" type="email" autocomplete="email" required>
+      <label for="password">Password</label><input id="password" name="password" type="password" autocomplete="current-password" minlength="6" required>
+      <button class="button button-primary button-block" type="submit" style="margin-top:20px">Sign in</button>
+    </form>
+    <p id="status" class="status" role="status"></p>
+    <p class="center"><a id="toggle-mode" href="#">New here? Create an account</a></p>
+  </section></main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/js/config.js"></script><script src="assets/js/supabase-client.js"></script><script src="assets/js/auth.js"></script>
+</body></html>
