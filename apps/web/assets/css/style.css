@@ -362,7 +362,7 @@ input[type=checkbox] { width: auto; accent-color: var(--navy); }
 .camera-roll-label { padding-bottom: 6px; color: var(--muted); font-size: .6rem; font-weight: 700; letter-spacing: .16em; }
 .camera-stage {
   position: relative; isolation: isolate; overflow: hidden; display: grid; place-items: center;
-  width: 100%; aspect-ratio: 4 / 3; max-height: 70svh; min-height: 260px;
+  width: 100%; max-width: 456px; height: auto; aspect-ratio: 4 / 3; margin-inline: auto;
   background: #111729; border: 1px solid rgba(14,29,97,.2);
 }
 .camera-stage::after {
@@ -370,8 +370,9 @@ input[type=checkbox] { width: auto; accent-color: var(--navy); }
   border: 1px solid rgba(243,238,228,.3); box-shadow: inset 0 0 0 1px rgba(14,29,97,.1);
 }
 .camera-stage video, .camera-stage img {
-  display: block; width: 100%; height: 100%; max-height: 70svh; object-fit: cover;
+  display: block; width: 100%; height: 100%; object-fit: cover;
 }
+.camera-stage [hidden] { display: none; }
 .camera-stage img { object-fit: contain; background: #111729; }
 .camera-placeholder {
   position: absolute; inset: 0; display: flex; flex-direction: column;
@@ -483,8 +484,7 @@ footer { padding: 30px 20px; text-align: center; border-top: 1px solid var(--gol
   .camera-heading { align-items: start; margin-bottom: 18px; }
   .camera-heading h1 { font-size: clamp(2.5rem, 12vw, 3.6rem); }
   .camera-roll-label { max-width: 92px; padding-top: 5px; text-align: right; line-height: 1.5; }
-  .camera-stage { min-height: 230px; max-height: 56svh; aspect-ratio: 4 / 3; }
-  .camera-stage video, .camera-stage img { max-height: 56svh; }
+  .camera-stage { width: 100%; }
   .camera-controls { grid-template-columns: 1fr 72px 1fr; gap: 12px 8px; padding: 20px 0 16px; }
   .camera-controls > :first-child { grid-column: 1; grid-row: 1; justify-self: start; }
   .camera-controls #switch-camera { grid-column: 1; grid-row: 2; justify-self: start; }
