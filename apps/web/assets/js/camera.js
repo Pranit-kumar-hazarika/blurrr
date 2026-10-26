@@ -12,9 +12,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const fileInput = document.querySelector("#file-input");
   const switchCamera = document.querySelector("#switch-camera");
   const filterToggle = document.querySelector("#filter-toggle");
+  const cameraShell = document.querySelector(".camera-shell");
+  const confirmation = document.querySelector("#photo-confirmation");
+  const confirmationPreview = document.querySelector("#confirmation-preview");
+  const confirmPhoto = document.querySelector("#confirm-photo");
+  const retakePhoto = document.querySelector("#retake-photo");
   let stream = null;
   let facingMode = "environment";
   let capturedBlob = null;
+  let capturedUrl = null;
   let vintageEnabled = true;
 
   const setStatus = (text, error = false) => {
@@ -28,6 +34,8 @@ document.addEventListener("DOMContentLoaded", () => {
   };
   const startCamera = async () => {
     if (!token) return setStatus("Open this page from a valid event link.", true);
+    startButton.disabled = true;
+    setStatus("Starting your camera…");
     stopCamera();
     try {
       stream = await navigator.mediaDevices.getUserMedia({
@@ -38,9 +46,16 @@ document.addEventListener("DOMContentLoaded", () => {
       await video.play();
       setStatus("Camera ready. Make a memory.");
       shutter.disabled = false;
+      shutter.hidden = false;
+      switchCamera.disabled = false;
+      cameraShell.classList.add("has-camera");
     } catch (error) {
       setStatus("Camera access failed. Allow camera permission or choose a photo from your device.", true);
       shutter.disabled = true;
+      switchCamera.disabled = true;
+      cameraShell.classList.remove("has-camera");
+    } finally {
+      startButton.disabled = false;
     }
   };
 
@@ -65,43 +80,84 @@ document.addEventListener("DOMContentLoaded", () => {
     return new Promise((resolve, reject) => canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error("Could not process the photo.")), "image/jpeg", 0.9));
   }
 
+  function reviewPhoto(blob) {
+    if (capturedUrl) URL.revokeObjectURL(capturedUrl);
+    capturedBlob = blob;
+    capturedUrl = URL.createObjectURL(blob);
+    confirmationPreview.src = capturedUrl;
+    confirmation.showModal();
+  }
+
+  function discardPhoto() {
+    if (capturedUrl) URL.revokeObjectURL(capturedUrl);
+    capturedUrl = null;
+    capturedBlob = null;
+    confirmationPreview.removeAttribute("src");
+    preview.removeAttribute("src");
+    preview.hidden = true;
+    video.hidden = false;
+    retake.hidden = uploadButton.hidden = true;
+    shutter.hidden = !stream;
+    cameraShell.classList.remove("photo-selected");
+    fileInput.value = "";
+  }
+
   async function capture() {
-    if (!stream || !video.videoWidth) return;
+    if (!stream || !video.videoWidth || shutter.disabled) return;
+    shutter.disabled = true;
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
-    const ctx = canvas.getContext("2d", { willReadFrequently: true });
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    if (vintageEnabled) applyVintage(ctx, canvas.width, canvas.height);
-    capturedBlob = await canvasToBlob(canvas);
-    preview.src = URL.createObjectURL(capturedBlob);
-    preview.hidden = false;
-    video.hidden = true;
-    retake.hidden = uploadButton.hidden = false;
-    shutter.hidden = true;
-    setStatus("Looking good? Upload it or retake.");
+    try {
+      const ctx = canvas.getContext("2d", { willReadFrequently: true });
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      if (vintageEnabled) applyVintage(ctx, canvas.width, canvas.height);
+      reviewPhoto(await canvasToBlob(canvas));
+      setStatus("Review your photo.");
+    } finally {
+      shutter.disabled = false;
+    }
   }
 
   startButton.addEventListener("click", startCamera);
   shutter.addEventListener("click", () => capture().catch((e) => setStatus(e.message, true)));
+  confirmPhoto.addEventListener("click", () => {
+    preview.src = capturedUrl;
+    preview.hidden = false;
+    video.hidden = true;
+    retake.hidden = uploadButton.hidden = false;
+    shutter.hidden = true;
+    cameraShell.classList.add("photo-selected");
+    confirmation.close();
+    setStatus("Photo ready. Upload it or retake.");
+  });
+  retakePhoto.addEventListener("click", () => {
+    confirmation.close();
+    discardPhoto();
+    setStatus(stream ? "Take another shot." : "Choose a photo or start the camera.");
+  });
+  confirmation.addEventListener("cancel", (event) => {
+    event.preventDefault();
+    retakePhoto.click();
+  });
   switchCamera.addEventListener("click", async () => {
     facingMode = facingMode === "environment" ? "user" : "environment";
     await startCamera();
   });
   filterToggle.addEventListener("change", () => { vintageEnabled = filterToggle.checked; });
   retake.addEventListener("click", () => {
-    capturedBlob = null; preview.hidden = true; video.hidden = false;
-    retake.hidden = uploadButton.hidden = true; shutter.hidden = false;
-    setStatus("Take another shot.");
+    discardPhoto();
+    setStatus(stream ? "Take another shot." : "Choose a photo or start the camera.");
   });
   fileInput.addEventListener("change", async () => {
     const file = fileInput.files?.[0];
     if (!file) return;
     if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) return setStatus("Choose a JPEG, PNG, or WebP image.", true);
-    capturedBlob = file;
-    preview.src = URL.createObjectURL(file);
-    preview.hidden = false; video.hidden = true; shutter.hidden = true;
-    retake.hidden = uploadButton.hidden = false;
-    setStatus("Photo selected. Ready to upload.");
+    try {
+      reviewPhoto(file);
+      setStatus("Review your photo.");
+    } catch (error) {
+      setStatus(error.message, true);
+    }
   });
   uploadButton.addEventListener("click", async () => {
     if (!capturedBlob) return;
@@ -113,12 +169,16 @@ document.addEventListener("DOMContentLoaded", () => {
       await window.blurrrApi.request(`/events/guest/${encodeURIComponent(token)}/photos`, { method: "POST", body: form });
       setStatus("Uploaded! Your memory is now in the event folder.");
       uploadButton.hidden = true;
+      capturedBlob = null;
     } catch (error) {
       setStatus(error.message, true);
     } finally { uploadButton.disabled = false; }
   });
 
-  window.addEventListener("pagehide", stopCamera);
+  window.addEventListener("pagehide", () => {
+    stopCamera();
+    if (capturedUrl) URL.revokeObjectURL(capturedUrl);
+  });
   if (!navigator.mediaDevices?.getUserMedia) {
     startButton.disabled = true;
     setStatus("This browser does not support camera access. You can still choose a photo.", true);

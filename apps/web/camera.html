@@ -2,19 +2,39 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#F2EEE5"><title>Camera — blurrr</title><link rel="icon" href="assets/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="assets/css/style.css"></head>
 <body>
   <header class="site-header"><a class="logo" href="index.html">blurrr<span>.</span></a><a id="back-link" href="javascript:history.back()">Back to event</a></header>
-  <main class="page-shell"><section class="panel">
-    <div class="eyebrow">Your disposable camera</div><h1 style="font-size:clamp(2.3rem,6vw,4rem)">Take the shot.</h1>
-    <div class="camera-stage"><video id="camera-preview" autoplay playsinline muted aria-label="Live camera preview"></video><canvas id="capture-canvas" hidden></canvas><img id="photo-preview" alt="Captured photo preview" hidden></div>
-    <div class="camera-controls">
-      <button id="start-camera" class="button button-secondary">Start camera</button>
-      <button id="switch-camera" class="button button-secondary">Flip camera</button>
-      <label style="margin:0;display:flex;align-items:center;gap:8px"><input id="filter-toggle" type="checkbox" checked> Vintage film</label>
-      <button id="shutter" class="shutter" aria-label="Take photo" disabled></button>
-      <button id="retake" class="button button-secondary" hidden>Retake</button>
-      <button id="upload-photo" class="button button-primary" hidden>Upload memory ↗</button>
+  <main class="page-shell camera-shell"><section class="panel camera-panel">
+    <div class="camera-heading">
+      <div><div class="eyebrow">Your disposable camera</div><h1>Take the shot.</h1></div>
+      <span class="camera-roll-label">ONE MOMENT AT A TIME</span>
     </div>
-    <label for="file-input">Or choose a photo from your device</label><input id="file-input" type="file" accept="image/jpeg,image/png,image/webp">
-    <p id="status" class="status" role="status">Camera is off until you press Start camera.</p>
+    <div class="camera-stage">
+      <video id="camera-preview" autoplay playsinline muted aria-label="Live camera preview"></video>
+      <canvas id="capture-canvas" hidden></canvas>
+      <img id="photo-preview" alt="Captured photo preview" hidden>
+      <div class="camera-placeholder"><span class="camera-placeholder-icon" aria-hidden="true">✳</span><span>Your camera preview will appear here</span><small>Allow camera access to get started</small></div>
+      <span class="camera-live-indicator"><span aria-hidden="true"></span> LIVE</span>
+    </div>
+    <dialog id="photo-confirmation" aria-labelledby="photo-confirmation-title">
+      <h2 id="photo-confirmation-title">Use this photo?</h2>
+      <img id="confirmation-preview" alt="Review the photo you just took">
+      <div class="button-row">
+        <button id="confirm-photo" class="button button-primary" type="button">Yes, use photo</button>
+        <button id="retake-photo" class="button button-secondary" type="button">No, retake</button>
+      </div>
+    </dialog>
+    <div class="camera-controls">
+      <button id="start-camera" class="button button-secondary" type="button">Start camera</button>
+      <button id="switch-camera" class="camera-icon-button" type="button" aria-label="Flip camera" title="Flip camera" disabled>↻</button>
+      <button id="shutter" class="shutter" type="button" aria-label="Take photo" disabled><span></span></button>
+      <label class="filter-control" for="filter-toggle"><input id="filter-toggle" type="checkbox" checked><span class="filter-switch" aria-hidden="true"></span><span>Vintage film</span></label>
+      <button id="retake" class="button button-secondary" type="button" hidden>Retake</button>
+      <button id="upload-photo" class="button button-primary" type="button" hidden>Upload memory <span aria-hidden="true">↗</span></button>
+    </div>
+    <div class="camera-footer">
+      <p id="status" class="status" role="status">Camera is off until you press Start camera.</p>
+      <input id="file-input" class="camera-file-input" type="file" accept="image/jpeg,image/png,image/webp">
+      <label class="camera-upload-label" for="file-input">Choose from device <span aria-hidden="true">↑</span></label>
+    </div>
   </section></main>
   <footer class="site-footer"><span>© <span data-year></span> blurrr</span><nav aria-label="Legal"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a></nav></footer>
   <script src="assets/js/config.js"></script><script src="assets/js/api.js"></script><script src="assets/js/camera.js"></script>
